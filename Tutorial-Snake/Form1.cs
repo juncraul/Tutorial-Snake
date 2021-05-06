@@ -72,33 +72,41 @@ namespace Tutorial_Snake
 
         private void Draw()
         {
-            Bitmap bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            Graphics graphics = Graphics.FromImage(bitmap);
-
-            graphics.FillRectangle(Brushes.Gray, 0, 0, pictureBox1.Width, pictureBox1.Height);
-
-            SizeF sizeCell = new SizeF((float)pictureBox1.Width / sizeMatrix, (float)pictureBox1.Height / sizeMatrix);
-
-            for(int i = 0; i < sizeMatrix; i++)
+            using (Bitmap bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height))
             {
-                for (int j = 0; j < sizeMatrix; j++)
+                using (Graphics graphics = Graphics.FromImage(bitmap))
                 {
-                    if(matrix[i, j] == 0)
+                    graphics.FillRectangle(Brushes.Gray, 0, 0, pictureBox1.Width, pictureBox1.Height);
+
+                    SizeF sizeCell = new SizeF((float)pictureBox1.Width / sizeMatrix, (float)pictureBox1.Height / sizeMatrix);
+
+                    for (int i = 0; i < sizeMatrix; i++)
                     {
-                        graphics.FillRectangle(Brushes.White, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
+                        for (int j = 0; j < sizeMatrix; j++)
+                        {
+                            if (matrix[i, j] == 0)
+                            {
+                                graphics.FillRectangle(Brushes.White, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
+                            }
+                            else if (matrix[i, j] == (int)MatrixObject.Food)
+                            {
+                                graphics.FillRectangle(Brushes.Red, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
+                            }
+                            else
+                            {
+                                graphics.FillRectangle(Brushes.Blue, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
+                            }
+                        }
                     }
-                    else if(matrix[i, j] == (int)MatrixObject.Food)
+
+                    if (pictureBox1.Image != null)
                     {
-                        graphics.FillRectangle(Brushes.Red, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
+                        pictureBox1.Image.Dispose();
                     }
-                    else
-                    {
-                        graphics.FillRectangle(Brushes.Blue, i * sizeCell.Width + 1, j * sizeCell.Height + 1, sizeCell.Width - 2, sizeCell.Height - 2);
-                    }
+
+                    pictureBox1.Image = (Image)bitmap.Clone();
                 }
             }
-
-            pictureBox1.Image = bitmap;
         }
 
         private void GameLogic()
